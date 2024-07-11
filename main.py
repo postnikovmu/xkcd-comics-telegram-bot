@@ -82,30 +82,26 @@ def main():
     args = parser.parse_args()
     period = args.period * 3600
 
-    # download 10 random comics
+    # download a comic
     dir_name = 'images'
     Path(dir_name).mkdir(parents=True, exist_ok=True)
 
     last_comic_number = get_last_comic_number()
-    for number in range(1, 11):
-        random_comic_number = random.randint(1, last_comic_number)
-        comic_image_name, comic_comments = download_comic(random_comic_number, dir_name)
-        print(f'Downloaded comic number {number} image {comic_image_name} with {comic_comments} comments.')
+    random_comic_number = random.randint(1, last_comic_number)
+    comic_image_name, comic_comments = download_comic(random_comic_number, dir_name)
+    print(f'Downloaded comic number {random_comic_number} image {comic_image_name} with {comic_comments} comments.')
 
-    # send the comics to the tg channel
+    # send the comic to the tg channel
     files = get_files_list('images')
     if not files:
         logging.error('The directory with images is empty')
-        exit(1)
+        return
 
-    while True:
-        try:
-            print('Start posting comics to the tg channel.')
-            send_all_files(bot, chat_id, files, period)
-            random.shuffle(files)
-        except tg_error.NetworkError as e:
-            logging.info('There was no internet connection')
-            time.sleep(2)
+    try:
+        print('Start posting comics to the tg channel.')
+        send_all_files(bot, chat_id, files, period)
+    except tg_error.NetworkError as e:
+        logging.info('There was no internet connection')
 
 
 if __name__ == '__main__':
