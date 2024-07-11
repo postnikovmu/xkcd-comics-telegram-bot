@@ -13,7 +13,6 @@ import telegram.error as tg_error
 
 def download_image(url, file_name, dir_name, extension='.jpg', params=None):
     full_file_name = file_name + extension
-    Path(dir_name).mkdir(parents=True, exist_ok=True)
     file_path = os.path.join(dir_name, full_file_name)
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -21,7 +20,7 @@ def download_image(url, file_name, dir_name, extension='.jpg', params=None):
         file.write(response.content)
 
 
-def download_comic(comic_number):
+def download_comic(comic_number, dir_name):
     comic_url = f'https://xkcd.com/{comic_number}/info.0.json'
 
     comic_response = requests.get(comic_url)
@@ -35,7 +34,7 @@ def download_comic(comic_number):
     image_response.raise_for_status()
 
     comic_image_name = f'comic_{comic_number}.jpg'
-    download_image(comic_image_url, comic_image_name, 'images')
+    download_image(comic_image_url, comic_image_name, dir_name)
 
     return comic_image_name, comic_comments
 
@@ -84,10 +83,13 @@ def main():
     period = args.period * 3600
 
     # download 10 random comics
+    dir_name = 'images'
+    Path(dir_name).mkdir(parents=True, exist_ok=True)
+
     last_comic_number = get_last_comic_number()
     for number in range(1, 11):
         random_comic_number = random.randint(1, last_comic_number)
-        comic_image_name, comic_comments = download_comic(random_comic_number)
+        comic_image_name, comic_comments = download_comic(random_comic_number, dir_name)
         print(f'Downloaded comic number {number} image {comic_image_name} with {comic_comments} comments.')
 
     # send the comics to the tg channel
