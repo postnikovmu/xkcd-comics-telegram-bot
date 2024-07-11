@@ -102,6 +102,9 @@ def main():
         send_all_files(bot, chat_id, files, period)
     except tg_error.NetworkError as e:
         logging.info('There was no internet connection')
+    finally:
+        for f in files:
+            os.remove(f)
 
 
 if __name__ == '__main__':
