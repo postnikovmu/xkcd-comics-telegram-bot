@@ -23,6 +23,10 @@ pip install -r requirements.txt
    -> packages, listed in requirements should be successfully installed. 
 
 ### Usage
-Run main.py, then if everything was successful, you will see the following output: 
+If you want to publish a random comic, just run main.py:'
+```
+$ python main.py
+``` 
+Then, if everything was successful, you will see the following output: 
 Start posting comics to the tg channel.
 
