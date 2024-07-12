@@ -11,10 +11,7 @@ Run main.py script
 4. Create environment variables in "your_project_folder\.env" file:
    TG_BOT_TOKEN= <- token for your telegram bot
    TG_CHANNEL_ID= <- id of your tg channel
-   
-   optional:
-   POST_PERIOD= <- default period of posting images, hours. Default value = 4. 
-   
+    
 5. Python3 should be already installed.
    Then use `pip` (or `pip3`, if there is a conflict with Python2) to install dependencies:
 ```

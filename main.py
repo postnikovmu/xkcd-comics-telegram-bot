@@ -1,13 +1,11 @@
 import os
-import argparse
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
-import time
 import random
+import logging
 
 import telegram
-import logging
 import telegram.error as tg_error
 
 
@@ -51,9 +49,8 @@ def get_settings():
     load_dotenv()
     token = os.environ['TG_BOT_TOKEN']
     chat_id = os.environ['TG_CHANNEL_ID']
-    period = float(os.environ.get('POST_PERIOD', '4'))
     bot = telegram.Bot(token=token)
-    return bot, chat_id, period
+    return bot, chat_id
 
 
 def get_files_list(folder):
@@ -67,20 +64,8 @@ def send_file(bot, chat_id, file_name):
         bot.send_document(chat_id=chat_id, document=file_to_send)
 
 
-def send_all_files(bot, chat_id, files_list, period):
-    for file_name in files_list:
-        send_file(bot, chat_id, file_name)
-        time.sleep(period)
-
-
 def main():
-    bot, chat_id, default_period = get_settings()
-
-    parser = argparse.ArgumentParser(description='posts images from "image" folder to telegram channel')
-    parser.add_argument("period", nargs='?', type=float, default=default_period,
-                        help='Period of image posting, hours (positive float number). Default = 4h.')
-    args = parser.parse_args()
-    period = args.period * 3600
+    bot, chat_id = get_settings()
 
     dir_name = 'images'
     Path(dir_name).mkdir(parents=True, exist_ok=True)
@@ -97,7 +82,8 @@ def main():
 
     try:
         print('Start posting comics to the tg channel.')
-        send_all_files(bot, chat_id, files, period)
+        if files[0]:
+            send_file(bot, chat_id, files[0])
     except tg_error.NetworkError as e:
         logging.info('There was no internet connection')
     finally:
