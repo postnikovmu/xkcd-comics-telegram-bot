@@ -82,7 +82,6 @@ def main():
     args = parser.parse_args()
     period = args.period * 3600
 
-    # download a comic
     dir_name = 'images'
     Path(dir_name).mkdir(parents=True, exist_ok=True)
 
@@ -91,7 +90,6 @@ def main():
     comic_image_name, comic_comments = download_comic(random_comic_number, dir_name)
     print(f'Downloaded comic number {random_comic_number} image {comic_image_name} with {comic_comments} comments.')
 
-    # send the comic to the tg channel
     files = get_files_list('images')
     if not files:
         logging.error('The directory with images is empty')
